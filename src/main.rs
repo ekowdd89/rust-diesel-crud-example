@@ -1,14 +1,10 @@
-use core::str;
-
 use actix_cors::Cors;
 use actix_web::{
     middleware::{self, Logger},
     App, HttpServer,
 };
-use actix_web_boilerplate::{config::cfg_postgres::pg_connection, db, handlers, services};
-use dotenv::dotenv;
+use actix_web_boilerplate::{db, handlers};
 use env_logger::Env;
-
 #[derive(Clone)]
 pub struct AppState {
     pub db: std::sync::Arc<std::sync::Mutex<diesel::PgConnection>>,
@@ -19,7 +15,7 @@ async fn main() -> std::io::Result<()> {
     if std::env::var_os("APP_LOG").is_none() {
         std::env::set_var("APP_LOG", "actix_web=info");
     }
-    dotenv().expect("Failed to read .env file");
+    dotenv::dotenv().expect("Failed to read .env file");
     env_logger::init_from_env(Env::default().default_filter_or("info"));
     HttpServer::new(move || {
         App::new()

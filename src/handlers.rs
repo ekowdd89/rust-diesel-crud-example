@@ -1,4 +1,4 @@
-use crate::services::{self, posts::delete_post};
+use crate::services;
 
 pub fn config(conf: &mut actix_web::web::ServiceConfig) {
     let scope = actix_web::web::scope("/v1")
