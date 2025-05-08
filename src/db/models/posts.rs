@@ -21,7 +21,7 @@ pub struct NewPost {
     pub published: bool,
 }
 
-#[derive(AsChangeset, Debug)]
+#[derive(AsChangeset, Debug, Deserialize)]
 #[diesel(table_name = posts)]
 pub struct UpdatePost {
     pub title: Option<String>,
@@ -32,14 +32,28 @@ pub struct UpdatePost {
 pub trait PostService {
     fn all() -> Result<Vec<Post>, diesel::result::Error>;
     fn create_post(new_post: NewPost) -> Result<Post, diesel::result::Error>;
+    fn update_post(id: i64, update_post: UpdatePost) -> Result<Post, diesel::result::Error>;
+    fn delete_post(id: i64) -> Result<Post, diesel::result::Error>;
+    fn show_post(id: i64) -> Result<Post, diesel::result::Error>;
 }
 impl PostService for Post {
     fn all() -> Result<Vec<Post>, diesel::result::Error> {
         posts::table.load::<Post>(&mut pg_connection())
     }
+    fn show_post(id: i64) -> Result<Post, diesel::result::Error> {
+        posts::table.find(id).get_result(&mut pg_connection())
+    }
     fn create_post(new_post: NewPost) -> Result<Post, diesel::result::Error> {
         diesel::insert_into(posts::table)
             .values(&new_post)
             .get_result(&mut pg_connection())
+    }
+    fn update_post(id: i64, update_post: UpdatePost) -> Result<Post, diesel::result::Error> {
+        diesel::update(posts::table.find(id))
+            .set(&update_post)
+            .get_result(&mut pg_connection())
+    }
+    fn delete_post(id: i64) -> Result<Post, diesel::result::Error> {
+        diesel::delete(posts::table.find(id)).get_result(&mut pg_connection())
     }
 }

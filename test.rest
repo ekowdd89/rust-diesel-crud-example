@@ -11,5 +11,20 @@
 
 
 
-GET http://localhost:8080/v1/posts HTTP/1.1
+# GET http://localhost:8080/v1/posts HTTP/1.1
+# Content-Type: application/json
+
+
+# PUT http://localhost:8080/v1/posts/1 HTTP/1.1
+# Content-Type: application/json
+
+# {
+#     "id": 1,
+#     "title": "Post 1 Update Ok",
+#     "content": "Updated content of post 1",
+#     "published": false
+# }
+
+
+GET  http://localhost:8080/v1/posts/2 HTTP/1.1
 Content-Type: application/json
